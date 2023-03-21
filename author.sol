@@ -17,10 +17,10 @@ contract Author {
     struct author {
         uint256 aid; //作者id
         uint256 reg;//注册时间
-        string portrait; //头像
+        // string portrait; //头像
         string bio; //签名
         string name; //名字
-        string thumbnail; //海报
+        // string thumbnail; //海报
         bool status; //状态 是否被禁用,true可以使用，false被禁用
     }
 
@@ -93,15 +93,16 @@ contract Author {
 
     //新增作者
     function addAuthorInfo(
-        string calldata _portrait, //头像
+        // string calldata _portrait, //头像
         string calldata _bio, //签名
-        string calldata _name, //名字
-        string calldata _thumbnail //海报
+        string calldata _name //名字
+        // string calldata _thumbnail //海报
     ) external {
         require(msg.sender != address(0));
         require(!_isAdd(msg.sender),"exist this author address, can not add new");
         uint reg = block.timestamp;
-        authorInfo[msg.sender] = author(authorID,reg,_portrait,_bio,_name,_thumbnail,true);
+        // authorInfo[msg.sender] = author(authorID,reg,_portrait,_bio,_name,_thumbnail,true);
+        authorInfo[msg.sender] = author(authorID,reg,_bio,_name,true);
         authorBelong[authorID] = msg.sender;
         authorID++;
     }
@@ -109,13 +110,14 @@ contract Author {
     // 作者修改个人资料
     function modifyAuthorInfo(
         uint256 _aid,
-        string calldata _portrait, //头像
+        // string calldata _portrait, //头像
         string calldata _bio, //签名
-        string calldata _name, //名字
-        string calldata _thumbnail //海报
+        string calldata _name //名字
+        // string calldata _thumbnail //海报
     ) external onlyAuthor(_aid) {
         uint reg = authorInfo[msg.sender].reg;
-        authorInfo[msg.sender] = author(_aid,reg,_portrait,_bio,_name,_thumbnail,true);
+        // authorInfo[msg.sender] = author(_aid,reg,_portrait,_bio,_name,_thumbnail,true);
+        authorInfo[msg.sender] = author(_aid,reg,_bio,_name,true);
     }
 
     // 管理员修改作者状态
