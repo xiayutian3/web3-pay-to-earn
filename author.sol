@@ -38,8 +38,9 @@ contract Author {
         uint8 payMethods; //支付方式  0 免费 1 强制付费 2 表示打赏
         uint8 rewardPercent; //分佣
         string title; //文章标题
-        string decription; //文章描述 （链接，存在ipfs上）
-        string content; //文章内容 （链接，存在ipfs上）
+        // 把文章内容，描述移到ipfs上  链上只存哈希
+        // string decription; //文章描述 （链接，存在ipfs上）
+        // string content; //文章内容 （链接，存在ipfs上）
     }
     struct article {
         uint256 arid; //文章id
@@ -50,8 +51,9 @@ contract Author {
         uint8 payMethods; //支付方式  0 免费 1 强制付费 2 表示打赏
         uint8 rewardPercent; //分佣(给推广者的佣金比例)
         string title; //文章标题
-        string decription; //文章描述 （链接，存在ipfs上）
-        string content; //文章内容 （链接，存在ipfs上）
+        // 把文章内容，描述移到ipfs上  链上只存哈希
+        // string decription; //文章描述 （链接，存在ipfs上）
+        // string content; //文章内容 （链接，存在ipfs上）
         bool status; //文章是否被禁用
         // articleVariable articleContent;
     }
@@ -135,6 +137,8 @@ contract Author {
         // uint8 _payMethods, //支付方式  0 免费 1 强制付费 2 表示打赏
         // uint8 _rewardPercent, //分佣
         // string calldata _title, //文章标题
+
+        // 把文章内容，描述移到ipfs上  链上只存哈希
         // string calldata _decription, //文章描述 （链接，存在ipfs上）
         // string calldata _content //文章内容 （链接，存在ipfs上）
 
@@ -143,7 +147,7 @@ contract Author {
     ) external onlyAuthor(_aid) {
         require(msg.sender != address(0));
         uint256 issue = block.timestamp;
-        articleInfo[articleID] = article(_aid, issue, contentData.deadline,contentData.needPay ,contentData.payCash,contentData.payMethods,contentData.rewardPercent,contentData.title,contentData.decription,contentData.content,true);
+        articleInfo[articleID] = article(_aid, issue, contentData.deadline,contentData.needPay ,contentData.payCash,contentData.payMethods,contentData.rewardPercent,contentData.title,true);
         articleBelongAuthor[articleID] = _aid;
         authorArticleList[_aid].push(articleID);
         articleID++;
@@ -158,6 +162,8 @@ contract Author {
         // uint8 _payMethods, //支付方式  0 免费 1 强制付费 2 表示打赏
         // uint8 _rewardPercent, //分佣
         // string calldata _title, //文章标题
+        
+        // 把文章内容，描述移到ipfs上  链上只存哈希
         // string calldata _decription, //文章描述 （链接，存在ipfs上）
         // string calldata _content //文章内容 （链接，存在ipfs上）
 
@@ -169,7 +175,7 @@ contract Author {
         require(aid == authorInfo[msg.sender].aid, "you are not owner");
         uint256 issue = articleInfo[_arid].issue;
         bool status = articleInfo[_arid].status;
-        articleInfo[_arid] = article(aid, issue, contentData.deadline,contentData.needPay ,contentData.payCash,contentData.payMethods,contentData.rewardPercent,contentData.title,contentData.decription,contentData.content,status);
+        articleInfo[_arid] = article(aid, issue, contentData.deadline,contentData.needPay ,contentData.payCash,contentData.payMethods,contentData.rewardPercent,contentData.title,status);
     }
 
     // 管理员对文章状态的修改
