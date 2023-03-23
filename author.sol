@@ -7,6 +7,7 @@ pragma solidity >=0.7.0 <0.9.0;
 contract Author {
     //取款事件
     event AuthorWithdraw( address indexed to, uint time, uint amount );
+    event NewArticle(uint aritcleID, string cid, uint aid); //新增文章事件
     
     mapping(address => author) public authorInfo;
     mapping(uint => address) public authorBelong;
@@ -39,6 +40,7 @@ contract Author {
         uint8 rewardPercent; //分佣
         string title; //文章标题
         // 把文章内容，描述移到ipfs上  链上只存哈希
+        string cid;
         // string decription; //文章描述 （链接，存在ipfs上）
         // string content; //文章内容 （链接，存在ipfs上）
     }
@@ -52,6 +54,7 @@ contract Author {
         uint8 rewardPercent; //分佣(给推广者的佣金比例)
         string title; //文章标题
         // 把文章内容，描述移到ipfs上  链上只存哈希
+        string cid;
         // string decription; //文章描述 （链接，存在ipfs上）
         // string content; //文章内容 （链接，存在ipfs上）
         bool status; //文章是否被禁用
@@ -149,9 +152,11 @@ contract Author {
     ) external onlyAuthor(_aid) {
         require(msg.sender != address(0));
         uint256 issue = block.timestamp;
-        articleInfo[articleID] = article(_aid, issue, contentData.deadline,contentData.needPay ,contentData.payCash,contentData.payMethods,contentData.rewardPercent,contentData.title,true);
+        articleInfo[articleID] = article(_aid, issue, contentData.deadline,contentData.needPay ,contentData.payCash,contentData.payMethods,contentData.rewardPercent, contentData.cid, contentData.title,true);
         articleBelongAuthor[articleID] = _aid;
         authorArticleList[_aid].push(articleID);
+
+        emit NewArticle(articleID, contentData.cid, _aid);
         articleID++;
     }
 
@@ -177,7 +182,7 @@ contract Author {
         require(aid == authorInfo[msg.sender].aid, "you are not owner");
         uint256 issue = articleInfo[_arid].issue;
         bool status = articleInfo[_arid].status;
-        articleInfo[_arid] = article(aid, issue, contentData.deadline,contentData.needPay ,contentData.payCash,contentData.payMethods,contentData.rewardPercent,contentData.title,status);
+        articleInfo[_arid] = article(aid, issue, contentData.deadline,contentData.needPay ,contentData.payCash,contentData.payMethods,contentData.rewardPercent,contentData.cid,contentData.title,status);
     }
 
     // 管理员对文章状态的修改
